@@ -523,6 +523,17 @@ app.get(['/privacy', '/privacy/', '/privacy/index.html'], (req, res) => {
   res.sendFile(path.join(__dirname, '../privacy-site/index.html'));
 });
 
+// Public Rootforge studio pages (landing, privacy policy, support)
+app.get(['/rootforge', '/rootforge/', '/rootforge/index.html'], (req, res) => {
+  res.sendFile(path.join(__dirname, '../rootforge-site/index.html'));
+});
+app.get(['/rootforge/privacy', '/rootforge/privacy/', '/rootforge/privacy/index.html'], (req, res) => {
+  res.sendFile(path.join(__dirname, '../rootforge-site/privacy/index.html'));
+});
+app.get(['/rootforge/support', '/rootforge/support/', '/rootforge/support/index.html'], (req, res) => {
+  res.sendFile(path.join(__dirname, '../rootforge-site/support/index.html'));
+});
+
 // Fallback to index.html for SPA routing
 app.use((req, res, next) => {
   if (!req.path.startsWith('/api')) {
