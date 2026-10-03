@@ -111,6 +111,19 @@ app.use(express.json({ limit: '1mb' }));
 // Trust proxy for Render
 app.set('trust proxy', 1);
 
+// Company site for rootforge.app. These routes are registered before the
+// static dashboard so `/` is the company homepage, not Soul Hub.
+const companySitePath = path.join(__dirname, '../company-site');
+
+app.get(['/', '/index.html'], (req, res) => {
+  res.sendFile(path.join(companySitePath, 'index.html'));
+});
+
+app.get(['/favicon.svg', '/favicon.ico'], (req, res) => {
+  res.type('image/svg+xml');
+  res.sendFile(path.join(companySitePath, 'favicon.svg'));
+});
+
 // WebSocket server for hot updates
 const wss = new WebSocket.Server({ noServer: true });
 let connectedClients = [];
@@ -534,10 +547,10 @@ app.get(['/rootforge/support', '/rootforge/support/', '/rootforge/support/index.
   res.sendFile(path.join(__dirname, '../rootforge-site/support/index.html'));
 });
 
-// Fallback to index.html for SPA routing
+// Unknown pages use the company homepage. Soul Hub stays at /soul-hub/.
 app.use((req, res, next) => {
   if (!req.path.startsWith('/api')) {
-    res.sendFile(path.join(distPath, 'index.html'));
+    res.sendFile(path.join(companySitePath, 'index.html'));
   } else {
     next();
   }
@@ -585,7 +598,7 @@ if (!process.env.RENDER) {
 // Start server
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`\n${'='.repeat(60)}`);
-  console.log(`🧠 SOUL HUB — LIVE`);
+  console.log(`ROOTFORGE LLC — LIVE`);
   console.log(`${'='.repeat(60)}`);
   console.log(`\n🚀 Server: http://0.0.0.0:${PORT}`);
   console.log(`\n📡 API endpoints:`);
